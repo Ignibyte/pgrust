@@ -3,6 +3,7 @@ name = "tsm_system_time"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "tsm_system_time"

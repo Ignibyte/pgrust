@@ -3,6 +3,7 @@ name = "sqe_spill"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "sqe_spill"

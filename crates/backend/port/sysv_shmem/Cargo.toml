@@ -3,6 +3,7 @@ name = "sysv_shmem"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "sysv_shmem"

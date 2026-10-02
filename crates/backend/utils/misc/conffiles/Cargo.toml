@@ -3,6 +3,7 @@ name = "conffiles"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 conffiles_seams = { path = "../conffiles_seams" }

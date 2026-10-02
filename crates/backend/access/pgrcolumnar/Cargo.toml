@@ -3,6 +3,7 @@ name = "pgrcolumnar"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [features]
 bench-internals = []

@@ -3,6 +3,7 @@ name = "order_key"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "order_key"

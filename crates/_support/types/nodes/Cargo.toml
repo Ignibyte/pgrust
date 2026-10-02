@@ -3,6 +3,7 @@ name = "types_nodes"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 stack_depth_core = { path = "../../../backend/utils/misc/stack_depth_core" }

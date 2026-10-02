@@ -3,6 +3,7 @@ name = "condition_variable"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "condition_variable"

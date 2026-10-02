@@ -3,6 +3,7 @@ name = "waiteventset_seams"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "waiteventset_seams"

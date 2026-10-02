@@ -3,6 +3,7 @@ name = "sql_functions"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 path = "src/lib.rs"

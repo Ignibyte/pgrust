@@ -3,6 +3,7 @@ name = "exectuples_output"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 path = "src/lib.rs"

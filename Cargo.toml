@@ -896,6 +896,9 @@ members = [
 [workspace.package]
 edition = "2021"
 publish = false
+# pgrust is AGPL-3.0; the portions derived from PostgreSQL remain under the
+# PostgreSQL License (README.md, NOTICE).
+license = "AGPL-3.0-only AND PostgreSQL"
 
 [profile.dev]
 debug = "line-tables-only"

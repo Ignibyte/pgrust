@@ -3,6 +3,7 @@ name = "pgsync"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 # THE single lock library (permit-s1 contract §0, docs/design/permit-scheduler.md §2):
 # the ONLY crate where any world-selection cfg for synchronization appears.

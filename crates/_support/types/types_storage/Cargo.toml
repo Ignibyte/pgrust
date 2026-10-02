@@ -3,6 +3,7 @@ name = "types_storage"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 # PageAddItemExtended's elog(WARNING) arms (bufpage.c:235/292/299) report on

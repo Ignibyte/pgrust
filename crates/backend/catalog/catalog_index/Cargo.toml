@@ -3,6 +3,7 @@ name = "catalog_index"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 bloom_build = { path = "../../../contrib/bloom_build" }

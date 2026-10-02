@@ -3,6 +3,7 @@ name = "stringhash"
 version = "0.0.0"
 edition = "2021"
 publish = false
+license.workspace = true
 
 # Root-workspace member (phase 2). Only dependency is libc for
 # madvise(MADV_HUGEPAGE) on the large table/arena allocations — the same

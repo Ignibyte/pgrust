@@ -3,6 +3,7 @@ name = "gin_trgm_seams"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 seam_core = { path = "../../../../_support/seam_core" }

@@ -3,6 +3,7 @@ name = "heapam"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 guc_tables = { path = "../../../utils/misc/guc_tables" }

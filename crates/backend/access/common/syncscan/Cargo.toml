@@ -3,6 +3,7 @@ name = "syncscan"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 init_small = { path = "../../../utils/init/init_small" }

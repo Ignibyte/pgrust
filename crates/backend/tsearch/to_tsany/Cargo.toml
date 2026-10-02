@@ -3,6 +3,7 @@ name = "to_tsany"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 types_fmgr = { path = "../../../_support/types/fmgr" }

@@ -3,6 +3,7 @@ name = "auto_explain"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "auto_explain"

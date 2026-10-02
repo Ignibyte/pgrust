@@ -3,6 +3,7 @@ name = "pqcomm_simnet"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "pqcomm_simnet"

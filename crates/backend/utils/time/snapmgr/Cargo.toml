@@ -3,6 +3,7 @@ name = "snapmgr"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 l2cache = { path = "../../cache/l2cache" }

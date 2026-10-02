@@ -3,6 +3,7 @@ name = "adt_int"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 clauses_seams = { path = "../../../optimizer/util/clauses_seams" }

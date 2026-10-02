@@ -3,6 +3,7 @@ name = "oauth_validators"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "oauth_validators"

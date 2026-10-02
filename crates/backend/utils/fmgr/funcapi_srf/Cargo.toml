@@ -2,6 +2,7 @@
 name = "funcapi_srf"
 version = "0.1.0"
 edition = "2021"
+license.workspace = true
 
 [dependencies]
 datum = { path = "../../../../_support/types/datum" }

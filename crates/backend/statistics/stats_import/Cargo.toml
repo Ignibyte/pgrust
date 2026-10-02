@@ -3,6 +3,7 @@ name = "stats_import"
 version = "0.0.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "stats_import"

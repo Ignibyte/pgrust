@@ -3,6 +3,7 @@ name = "copy_cmd"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [lib]
 name = "copy_cmd"
