@@ -264,37 +264,20 @@ fn main() {
         // without a pgsync→backend dependency.
         pgsync::set_park_interrupt_probe(init_small::globals::InterruptPending);
     }
-    // ipc::proc_exit ends the process by unwinding a ProcExitThread payload
-    // rather than calling exit(2) — a thread must never _exit the shared
-    // process. Nothing used to catch it here, so Rust's default panic path
-    // turned even a CLEAN shutdown into exit code 101: `docker stop` and any
-    // k8s liveness/restart policy read that as a crash. Carry the intended
-    // code through instead. Real panics are re-raised untouched.
-    // unwind-ok: log-then-die
-    match std::panic::catch_unwind(run) {
-        Ok(()) => {}
-        Err(payload) => {
-            if let Some(p) = payload.downcast_ref::<::ipc::ProcExitThread>() {
-                std::process::exit(p.code);
-            }
-            std::panic::resume_unwind(payload);
-        }
-    }
+    // The process's own hooks first, then the server through its library
+    // entry point, which installs the transport seam (§2.4: one argv peek,
+    // once, before any seam install), runs pg_main, and turns a clean
+    // shutdown's ProcExitThread unwind into the exit code (before it was
+    // caught, Rust's default panic path made even a CLEAN shutdown exit 101:
+    // `docker stop` and any k8s restart policy read that as a crash).
+    install_process_hooks();
+    let argv: Vec<String> = main_main::argv_from_os(std::env::args_os());
+    std::process::exit(main_main::run_server(&argv));
 }
 
-fn run() {
-    // Transport provider resolution (§2.4 seam): one argv peek, once, before
-    // any seam install — set-once at boot is the house pattern. Everything
-    // but `--stdio-wire` / `--sim-net` (all the C dispatch options included)
-    // boots the socket provider, i.e. the unchanged native byte path.
-    let arg1 = std::env::args().nth(1);
-    let transport = match arg1.as_deref() {
-        Some("--stdio-wire") => seams_init::Transport::StdioWire,
-        #[cfg(pgrust_sim)]
-        Some("--sim-net") => seams_init::Transport::SimNet,
-        _ => seams_init::Transport::Socket,
-    };
-    seams_init::init_all_with_transport(transport);
+/// The hooks that belong to this process rather than to the server: they read
+/// mimalloc, this binary's global allocator.
+fn install_process_hooks() {
     // mi_collect(force) releases mimalloc's freed-but-retained segments;
     // called only at alloc-churn boundaries (hashagg spill batch resets)
     // where retention would otherwise hold batch-sized RSS for the whole
@@ -371,10 +354,5 @@ fn run() {
         unsafe { libc::atexit(alloc_track::dump) };
         alloc_track::ENABLED.store(true, std::sync::atomic::Ordering::Relaxed);
         eprintln!("ALLOC-TRACK: enabled");
-    }
-    let argv: Vec<String> = main_main::argv_from_os(std::env::args_os());
-    if let Err(e) = main_main::pg_main(&argv) {
-        elog::emit_unhandled_error_report(&e);
-        std::process::exit(1);
     }
 }

@@ -209,6 +209,54 @@ pub fn argv_from_os<I: IntoIterator<Item = std::ffi::OsString>>(args: I) -> Vec<
     args.into_iter().map(|a| a.to_string_lossy().into_owned()).collect()
 }
 
+/// Runs the server from an argument list and returns its exit code: the
+/// library form of the `postgres` binary, for a binary that embeds pgrust and
+/// starts it in a process of its own (pgrust's backends are threads of that
+/// process, and a backend ends the process by unwinding, so the server needs a
+/// process to itself).
+///
+/// `argv` is the C `argv`, program name first, exactly as `postgres` takes it.
+/// The transport seam is chosen from `argv[1]` (`--stdio-wire`, `--sim-net`
+/// under `--cfg pgrust_sim`, otherwise the socket provider), every seam is
+/// installed, and [`pg_main`] runs. A clean shutdown's `ProcExitThread` unwind
+/// becomes its exit code, an error `pg_main` returns is reported and becomes
+/// 1, and any other panic resumes unwinding untouched. The caller exits the
+/// process with the code.
+///
+/// What belongs to the process rather than the server stays with the caller:
+/// the global allocator, and the hooks that read it (`mcx`'s release hook, the
+/// memory watchdog's and the QoS governor's statistics). `postgres` installs
+/// mimalloc's before calling this, and a binary on another allocator installs
+/// its own or none.
+pub fn run_server(argv: &[String]) -> i32 {
+    let transport = match argv.get(1).map(String::as_str) {
+        Some("--stdio-wire") => seams_init::Transport::StdioWire,
+        #[cfg(pgrust_sim)]
+        Some("--sim-net") => seams_init::Transport::SimNet,
+        _ => seams_init::Transport::Socket,
+    };
+    // ipc::proc_exit ends the process by unwinding a ProcExitThread payload
+    // rather than calling exit(2): a thread must never _exit the shared
+    // process. Carry the intended code out instead of letting the default
+    // panic path turn a CLEAN shutdown into 101. Real panics are re-raised
+    // untouched.
+    // unwind-ok: log-then-die
+    match std::panic::catch_unwind(|| {
+        seams_init::init_all_with_transport(transport);
+        pg_main(argv)
+    }) {
+        Ok(Ok(())) => 0,
+        Ok(Err(e)) => {
+            elog::emit_unhandled_error_report(&e);
+            1
+        }
+        Err(payload) => match payload.downcast_ref::<::ipc::ProcExitThread>() {
+            Some(p) => p.code,
+            None => std::panic::resume_unwind(payload),
+        },
+    }
+}
+
 pub fn pg_main(argv: &[String]) -> PgResult<()> {
     let mut do_check_root = true;
     let mut dispatch_option = DispatchOption::Postmaster;
