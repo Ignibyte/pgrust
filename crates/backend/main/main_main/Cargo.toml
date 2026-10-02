@@ -12,9 +12,15 @@ path = "src/lib.rs"
 [[bin]]
 name = "postgres"
 path = "src/bin/postgres.rs"
+# The binary's global allocator is mimalloc, and the hooks it installs read it.
+required-features = ["mimalloc"]
 
 [features]
-default = ["re2"]
+default = ["mimalloc", "re2"]
+# mimalloc, the `postgres` binary's global allocator (a C build). The library
+# never uses it: a binary that embeds pgrust through `run_server` chooses its
+# own allocator, sets `default-features = false`, and compiles none of it.
+mimalloc = ["dep:mimalloc", "dep:libmimalloc-sys"]
 # The RE2 regex engine (regexp_alt's `re2`). pgrust's own `postgres` binary
 # keeps it; an embedding binary that cannot require libre2 on its hosts sets
 # `default-features = false` and gets the Spencer-only engine in every profile.
@@ -82,8 +88,8 @@ seams_init = { path = "../../../_support/seams_init" }
 # mimalloc is a C allocator; wasm32 std already defaults to dlmalloc, and
 # bin/postgres.rs cfg-outs the global-alloc + release hook there.
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-mimalloc = "0.1"
-libmimalloc-sys = { version = "0.1", features = ["extended"] }
+mimalloc = { version = "0.1", optional = true }
+libmimalloc-sys = { version = "0.1", features = ["extended"], optional = true }
 
 # The Antithesis coverage runtime links only on the platform Antithesis runs
 # (linux/amd64); target-scoping keeps macOS/aarch64 dev builds working even
