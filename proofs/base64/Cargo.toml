@@ -1,9 +1,0 @@
-[package]
-name = "proof-base64"
-version = "0.1.0"
-edition = "2021"
-
-[workspace]
-
-[dependencies]
-pg_b64 = { path = "../../crates/common/base64" }
