@@ -21,6 +21,9 @@ use wasm_lc::*;
 
 pub const PG_BACKEND_VERSIONSTR: &str = "postgres (PostgreSQL) 18.6\n";
 
+#[cfg(feature = "init")]
+pub mod embedded;
+
 const SRC: &str = "src/backend/main/main.c";
 
 fn loc(line: i32, func: &'static str) -> ErrorLocation {
