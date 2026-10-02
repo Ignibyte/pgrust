@@ -16,6 +16,9 @@
 // artifact-level assertion (scripts/check-re2-linkage.sh) covers BOTH modes
 // post-link: a binary without RE2 evidence fails the re2 expectation no
 // matter which path dropped it.
+// The `re2` cargo feature (default on) is the deliberate opt-out: with it off,
+// every profile builds Spencer-only and nothing below runs, so a binary that
+// embeds pgrust need not require RE2 on its hosts.
 // Runtime witnesses ride separately: the postmaster startup line and the
 // pgrust.regex_re2_linked preset GUC; scripts/check-re2-linkage.sh greps a
 // built (stripped) binary for RE2 string evidence.
@@ -89,6 +92,19 @@ fn main() {
     println!("cargo:rustc-check-cfg=cfg(have_re2)");
     println!("cargo:rerun-if-changed=src/re2_shim.cc");
     println!("cargo:rerun-if-env-changed=PGRUST_FORCE_NO_RE2");
+    if std::env::var_os("CARGO_FEATURE_RE2").is_none() {
+        // The `re2` feature is off: the binary asked for the Spencer-only
+        // engine, so every profile builds it, release included. This is the
+        // DELIBERATE Spencer-only build the release-family rule below exists to
+        // keep from happening by accident: it is chosen in a manifest, not by a
+        // missing library. Loud all the same, and the postmaster's startup
+        // line says "spencer only".
+        println!(
+            "cargo:warning=regexp_alt: the `re2` feature is off — building the \
+             Spencer-only regex engine"
+        );
+        return;
+    }
     if wasm_target() {
         // wasm32 carve-out: libre2 is native C++ linked through the cc shim
         // and cannot be built for wasm32-wasip1 at all, so the release-family

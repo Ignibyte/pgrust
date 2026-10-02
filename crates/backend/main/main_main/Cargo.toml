@@ -14,6 +14,11 @@ name = "postgres"
 path = "src/bin/postgres.rs"
 
 [features]
+default = ["re2"]
+# The RE2 regex engine (regexp_alt's `re2`). pgrust's own `postgres` binary
+# keeps it; an embedding binary that cannot require libre2 on its hosts sets
+# `default-features = false` and gets the Spencer-only engine in every profile.
+re2 = ["regexp_alt/re2"]
 # Antithesis harness builds only (antithesis/ directory): SDK assertions +
 # sancov coverage instrumentation. OFF by default — product builds compile
 # none of it. The harness image build (root Dockerfile, ARG ANTITHESIS=1)
@@ -42,6 +47,7 @@ oauth-test-validator = [
 ]
 
 [dependencies]
+regexp_alt = { path = "../../utils/adt/regexp_alt", default-features = false }
 # Feature carriers for oauth-test-validator (both already in the graph
 # transitively via seams_init / guc).
 oauth_validators = { path = "../../libpq/oauth_validators" }

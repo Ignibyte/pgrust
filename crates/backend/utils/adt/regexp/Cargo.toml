@@ -22,7 +22,7 @@ types_fmgr = { path = "../../../../_support/types/fmgr" }
 varlena = { path = "../varlena" }
 arrayfuncs = { path = "../arrayfuncs" }
 funcapi_srf = { path = "../../fmgr/funcapi_srf" }
-regexp_alt = { path = "../regexp_alt" }
+regexp_alt = { path = "../regexp_alt", default-features = false }
 postgres_seams = { path = "../../../tcop/postgres_seams" }
 
 [dev-dependencies]

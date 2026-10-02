@@ -5,6 +5,15 @@ edition.workspace = true
 publish.workspace = true
 license.workspace = true
 
+[features]
+default = ["re2"]
+# Links the RE2 C++ engine beside Spencer's (`regex_engine=auto` dispatches
+# compatible patterns to it). Off, the crate is Spencer-only in EVERY profile
+# and its build needs no C++ toolchain and no libre2: what a binary that links
+# pgrust as a library chooses when its hosts cannot be required to carry RE2.
+# The postmaster's startup line names the engines either way.
+re2 = []
+
 [dependencies]
 memchr = { version = "2", default-features = false }
 mcx = { path = "../../../../_support/mcx" }

@@ -9416,6 +9416,7 @@ dependencies = [
  "postgres_seams",
  "postmaster",
  "ps_status",
+ "regexp_alt",
  "runtime",
  "seams_init",
  "stack_depth",
